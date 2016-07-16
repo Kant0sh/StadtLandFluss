@@ -10,11 +10,21 @@ using System.Windows.Forms;
 
 namespace SLF
 {
-    public partial class Form1 : Form
+    public partial class ConnectToServerWindow : Form
     {
-        public Form1()
+        public ConnectToServerWindow()
         {
             InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

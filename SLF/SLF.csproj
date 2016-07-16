@@ -46,14 +46,40 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="Client.cs" />
+    <Compile Include="ConnectToServerWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ConnectToServerWindow.Designer.cs">
+      <DependentUpon>ConnectToServerWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GameWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GameWindow.Designer.cs">
+      <DependentUpon>GameWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kategorie.cs" />
+    <Compile Include="AddCategoriesWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddCategoriesWindow.Designer.cs">
+      <DependentUpon>AddCategoriesWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KategorieErstellerPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddCategoriesWindow.resx">
+      <DependentUpon>AddCategoriesWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConnectToServerWindow.resx">
+      <DependentUpon>ConnectToServerWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GameWindow.resx">
+      <DependentUpon>GameWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
