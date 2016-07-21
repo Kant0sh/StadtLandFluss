@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SLF
 {
-    class Client
+    static class PacketHandler
     {
 
-
+        
 
     }
 }

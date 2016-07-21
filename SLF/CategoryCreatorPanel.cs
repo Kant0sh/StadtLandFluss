@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace SLF
 {
-    class KategorieErstellerPanel : Panel
+    class CategoryCreatorPanel : Panel
     {
         
         private System.Windows.Forms.Button button;
@@ -22,7 +22,7 @@ namespace SLF
         private int width;
         private int padding;
 
-        public KategorieErstellerPanel(int id, ArrayList kepList, Form parentForm, int width, int height, int padding)
+        public CategoryCreatorPanel(int id, ArrayList kepList, Form parentForm, int width, int height, int padding)
         {
 
             this.id = id;
@@ -67,7 +67,7 @@ namespace SLF
 
         }
 
-        public KategorieErstellerPanel Disable()
+        public CategoryCreatorPanel Disable()
         {
 
             this.button.Enabled = false;
@@ -77,7 +77,7 @@ namespace SLF
 
         }
 
-        public KategorieErstellerPanel Enable()
+        public CategoryCreatorPanel Enable()
         {
 
             this.button.Enabled = true;
@@ -87,7 +87,7 @@ namespace SLF
 
         }
 
-        public KategorieErstellerPanel Editable()
+        public CategoryCreatorPanel Editable()
         {
 
             this.button.Text = "Bearbeiten";
@@ -106,8 +106,8 @@ namespace SLF
                 {
 
                     Editable();
-                    ((KategorieErstellerPanel)kepList[id + 1]).Enable();
-                    kepList.Add(new KategorieErstellerPanel(kepList.Count, kepList, parentForm, 323, 32, 12).Disable());
+                    ((CategoryCreatorPanel)kepList[id + 1]).Enable();
+                    kepList.Add(new CategoryCreatorPanel(kepList.Count, kepList, parentForm, 323, 32, 12).Disable());
                     ((AddCategoriesWindow)parentForm).Reinit();
 
                 }else if(button.Text == "Bearbeiten")

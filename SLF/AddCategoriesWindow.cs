@@ -17,46 +17,46 @@ namespace SLF
 
         private Thread thread;
 
-        private ArrayList katList;
+        private ArrayList catList;
 
-        private ArrayList kepList;
+        private ArrayList ccpList;
         private Button startBtn;
 
         public AddCategoriesWindow()
         {
 
-            katList = new ArrayList();
+            catList = new ArrayList();
 
             InitializeComponent();
 
-            this.kepList = new ArrayList();
+            this.ccpList = new ArrayList();
 
-            this.kepList.Add(new KategorieErstellerPanel(kepList.Count, this.kepList, this, 323, 32, 12));
-            this.kepList.Add(new KategorieErstellerPanel(kepList.Count, this.kepList, this, 323, 32, 12).Disable());
+            this.ccpList.Add(new CategoryCreatorPanel(ccpList.Count, this.ccpList, this, 323, 32, 12));
+            this.ccpList.Add(new CategoryCreatorPanel(ccpList.Count, this.ccpList, this, 323, 32, 12).Disable());
 
-            foreach (object obj in kepList)
+            foreach (object obj in ccpList)
             {
-                this.Controls.Add((KategorieErstellerPanel)obj);
+                this.Controls.Add((CategoryCreatorPanel)obj);
             }
-            this.startBtn.Location = new System.Drawing.Point(((KategorieErstellerPanel)kepList[kepList.Count - 1]).Location.X, ((KategorieErstellerPanel)kepList[kepList.Count - 1]).getPadding() + ((KategorieErstellerPanel)kepList[kepList.Count - 1]).getHeight() + ((KategorieErstellerPanel)kepList[kepList.Count - 1]).Location.Y);
+            this.startBtn.Location = new System.Drawing.Point(((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.X, ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getPadding() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getHeight() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.Y);
         }
 
         private void startBtn_Click(object sender, EventArgs e)
         {
 
-            foreach(object obj in kepList)
+            foreach(object obj in ccpList)
             {
-                if(((KategorieErstellerPanel)obj).getButtonText() == "Fertig")
+                if(((CategoryCreatorPanel)obj).getButtonText() == "Fertig")
                 {
                     MessageBox.Show("Eine Kategorie wird noch bearbeitet!");
                     return;
                 }
             }
 
-            foreach(object obj in kepList)
+            foreach(object obj in ccpList)
             {
 
-                katList.Add(new Kategorie(((KategorieErstellerPanel)obj).getText()));
+                catList.Add(new Category(((CategoryCreatorPanel)obj).getText()));
 
             }
 
@@ -69,18 +69,18 @@ namespace SLF
 
         public void Reinit()
         {
-            foreach (object obj in kepList)
+            foreach (object obj in ccpList)
             {
-                this.Controls.Add((KategorieErstellerPanel)obj);
+                this.Controls.Add((CategoryCreatorPanel)obj);
             }
 
-            this.startBtn.Location = new System.Drawing.Point(((KategorieErstellerPanel)kepList[kepList.Count - 1]).Location.X, ((KategorieErstellerPanel)kepList[kepList.Count - 1]).getPadding() + ((KategorieErstellerPanel)kepList[kepList.Count - 1]).getHeight() + ((KategorieErstellerPanel)kepList[kepList.Count - 1]).Location.Y);
+            this.startBtn.Location = new System.Drawing.Point(((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.X, ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getPadding() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getHeight() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.Y);
 
         }
 
         private void openGameWindow()
         {
-            Application.Run(new GameWindow(katList));
+            Application.Run(new GameWindow(catList));
         }
 
     }

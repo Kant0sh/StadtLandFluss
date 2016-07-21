@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs" />
     <Compile Include="ConnectToServerWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -59,16 +58,20 @@
     <Compile Include="GameWindow.Designer.cs">
       <DependentUpon>GameWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Kategorie.cs" />
+    <Compile Include="Category.cs" />
     <Compile Include="AddCategoriesWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AddCategoriesWindow.Designer.cs">
       <DependentUpon>AddCategoriesWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="KategorieErstellerPanel.cs">
+    <Compile Include="CategoryCreatorPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Net\Client.cs" />
+    <Compile Include="Net\Packet.cs" />
+    <Compile Include="Net\PacketHandler.cs" />
+    <Compile Include="Net\Server.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AddCategoriesWindow.resx">
