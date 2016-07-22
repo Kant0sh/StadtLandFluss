@@ -75,18 +75,7 @@ namespace SLF
                 string s = string.Empty;
                 while (!(s = sr.ReadLine()).Equals("Exit"))
                 {
-                    Packet replyPack = PacketHandler.Handle(s);
-                    string reply = PacketHandler.Parse(replyPack);
-                    if (replyPack.sync)
-                    {
-                        SyncMessage(reply);
-                    }
-                    else
-                    {
-                        sw.WriteLine(reply);
-                        sw.Flush();
-                    }
-                    
+                                        
                 }
 
                 sr.Close();
@@ -107,6 +96,11 @@ namespace SLF
                     client.Close();
                 }
             }
+
+        }
+
+        public void Send(string msg)
+        {
 
         }
 

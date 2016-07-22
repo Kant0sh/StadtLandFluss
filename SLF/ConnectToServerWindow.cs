@@ -23,20 +23,33 @@ namespace SLF
 
         private void button1_Click(object sender, EventArgs e) // Connect
         {
+
+            Client client = CreateClient(textBox1.Text, 59687);
+
             Close();
             Dispose();
-            CreateAddCatWindowThread();
+            CreateAddCatWindowThread(client);
+
         }
 
         private void button2_Click(object sender, EventArgs e) // Create Server
         {
 
+            CreateServer(59687);
+            Client client = CreateClient("127.0.0.1", 59687);
+
+            Close();
+            Dispose();
+            CreateAddCatWindowThread(client);
+
         }
 
-        private void CreateClient(string ipAddress, int port)
+        private Client CreateClient(string ipAddress, int port)
         {
             Thread t = new Thread(RunClient);
-            t.Start(new Client(ipAddress, port));
+            Client cli = new Client(ipAddress, port);
+            t.Start(cli);
+            return cli;
         }
 
         private void RunClient(object cli)
@@ -55,16 +68,16 @@ namespace SLF
         {
             ((Server)srv).Run();
         }
-        private void CreateAddCatWindowThread()
+        private void CreateAddCatWindowThread(Client client)
         {
             Thread t = new Thread(OpenAddCatWindow);
             t.SetApartmentState(ApartmentState.STA);
-            t.Start();
+            t.Start(client);
         }
 
-        private void OpenAddCatWindow()
+        private void OpenAddCatWindow(object arg)
         {
-            Application.Run(new AddCategoriesWindow());
+            Application.Run(new AddCategoriesWindow((Client) arg));
         }
 
     }

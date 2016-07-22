@@ -15,15 +15,18 @@ namespace SLF
     public partial class AddCategoriesWindow : Form
     {
 
-        private Thread thread;
+        private Client client;
 
         private ArrayList catList;
 
         private ArrayList ccpList;
         private Button startBtn;
 
-        public AddCategoriesWindow()
+        public AddCategoriesWindow(Client client)
         {
+
+            this.client = client;
+            client.MessageReceived += Client_MessageReceived;
 
             catList = new ArrayList();
 
@@ -39,6 +42,26 @@ namespace SLF
                 this.Controls.Add((CategoryCreatorPanel)obj);
             }
             this.startBtn.Location = new System.Drawing.Point(((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.X, ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getPadding() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getHeight() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.Y);
+        }
+
+        private void Client_MessageReceived(string msg)
+        {
+            int p = -1;
+            try
+            {
+                p = Int32.Parse(msg);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            switch (p)
+            {
+                case Packet.Connect:
+                    
+            }
+
         }
 
         private void startBtn_Click(object sender, EventArgs e)
@@ -61,7 +84,7 @@ namespace SLF
             }
 
             this.Dispose(true);
-            thread = new Thread(openGameWindow);
+            Thread thread = new Thread(openGameWindow);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
 

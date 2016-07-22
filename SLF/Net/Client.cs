@@ -7,11 +7,15 @@ using System.Threading;
 using System.Net;
 using System.IO;
 using System.Net.Sockets;
+using SLF.Net;
 
 namespace SLF
 {
-    class Client
+
+    public class Client
     {
+
+        public static char SPLIT = '%';
 
         private string ipAddress;
         private int port;
@@ -39,9 +43,9 @@ namespace SLF
 
                 Thread t = new Thread(WaitForReply);
                 t.Start(client);
-                
-                StreamWriter sw = new StreamWriter(client.GetStream());
-                StreamReader sr = new StreamReader(client.GetStream());
+
+                sw = new StreamWriter(client.GetStream());
+                sr = new StreamReader(client.GetStream());
 
             }
             catch (Exception e)
@@ -80,7 +84,7 @@ namespace SLF
                 string reply = string.Empty;
                 while (!(reply = sr.ReadLine()).Equals("Exit"))
                 {
-                    OnMessageReceived(reply);
+                    HandleMessage(reply);
                 }
                 Close();
             }
@@ -94,15 +98,29 @@ namespace SLF
             }
         }
 
-        public delegate void MessageReceivedHandler(string msg);
-        public event MessageReceivedHandler MessageReceived;
-
-        protected virtual void OnMessageReceived(string msg)
+        private void HandleMessage(string msg)
         {
-            if(MessageReceived != null)
+            if (msg.Length == 0) return;
+            string[] splitMsg = msg.Split(SPLIT);
+            int id = -1;
+            try
             {
-                MessageReceived(msg);
+                id = Int32.Parse(splitMsg[0]);
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            switch (id)
+            {
+                case (int)Packet.CatList:
+                    break;
+                default:
+                    Close();
+                    break;
+            }
+
         }
 
     }
