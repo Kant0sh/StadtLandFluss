@@ -7,18 +7,17 @@ using System.Threading;
 using System.Net;
 using System.IO;
 using System.Net.Sockets;
+using System.Collections;
 
-namespace SLF
+namespace SLF.Net
 {
-    class Server
+    public class Server
     {
 
         private int port;
 
         TcpListener listener;
-        List<TcpClient> clientList;
-
-        private string syncStr = string.Empty;
+        public List<TcpClient> clientList;
 
         public Server(int port)
         {
@@ -46,6 +45,7 @@ namespace SLF
                     Thread cliThread = new Thread(ProcessClientRequests);
                     clientList.Add(client);
                     cliThread.Start(client);
+                    OnClientConnected();
                 }
 
             }
@@ -62,27 +62,26 @@ namespace SLF
             }
         }
 
+        public delegate void ClientConnected();
+        public event ClientConnected ClientConnectedEvent;
+        protected virtual void OnClientConnected()
+        {
+            ClientConnectedEvent?.Invoke();
+        }
+
         private void ProcessClientRequests(object argument)
         {
-
             TcpClient client = (TcpClient)argument;
 
             try
             {
                 StreamReader sr = new StreamReader(client.GetStream());
-                StreamWriter sw = new StreamWriter(client.GetStream());
 
                 string s = string.Empty;
                 while (!(s = sr.ReadLine()).Equals("Exit"))
                 {
-                                        
+                    HandleMessage(client, s);
                 }
-
-                sr.Close();
-                sw.Close();
-                Console.WriteLine("Closing Client Connection!");
-                clientList.Remove(client);
-                client.Close();
 
             }
             catch (Exception e)
@@ -99,29 +98,33 @@ namespace SLF
 
         }
 
-        public void Send(string msg)
+        public void Send(TcpClient client, string msg)
         {
-
+            StreamWriter sw = new StreamWriter(client.GetStream());
+            sw.WriteLine(msg);
+            sw.Flush();
+            sw.Close();
         }
 
-        private void SyncMessage(string s)
+        public void SendToAll(string msg)
         {
-
-            syncStr = s;
-
-            foreach(TcpClient cli in clientList)
+            foreach (TcpClient cli in clientList)
             {
 
-                Thread t = new Thread(SyncToClient);
-                t.Start(cli);
+                Thread t = new Thread(SendToClient);
+                ArrayList args = new ArrayList();
+                args.Add(cli);
+                args.Add(msg);
+                t.Start(args);
 
             }
 
         }
 
-        private void SyncToClient(object cli)
+        private void SendToClient(object args)
         {
-            TcpClient client = (TcpClient)cli;
+            TcpClient client = (TcpClient)((ArrayList)args)[0];
+            string msg = (string)((ArrayList)args)[1];
 
             //Console.WriteLine("SYNCING...");
 
@@ -130,16 +133,31 @@ namespace SLF
 
                 StreamWriter sw = new StreamWriter(client.GetStream());
                 //Console.WriteLine("Writing " + syncStr + " to SW!");
-                sw.WriteLine(syncStr);
+                sw.WriteLine(msg);
                 sw.Flush();
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Sync failed!");
             }
 
         }
 
+        private void HandleMessage(TcpClient cli, string msg)
+        {
+
+            int type = MessageToolkit.GetType(msg);
+            string[] msgArray = MessageToolkit.GetMessageArray(msg);
+
+            switch (type)
+            {
+                case (int)Message.ReadyToSendCat:
+                    break;
+                default:
+                    break;
+            }
+
+        }
     }
 }

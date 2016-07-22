@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using SLF.Net;
 
 namespace SLF
 {
@@ -16,17 +17,18 @@ namespace SLF
     {
 
         private Client client;
+        private GameData data;
 
         private ArrayList catList;
 
         private ArrayList ccpList;
         private Button startBtn;
 
-        public AddCategoriesWindow(Client client)
+        public AddCategoriesWindow(Client client, GameData data)
         {
 
             this.client = client;
-            client.MessageReceived += Client_MessageReceived;
+            this.data = data;
 
             catList = new ArrayList();
 
@@ -42,26 +44,6 @@ namespace SLF
                 this.Controls.Add((CategoryCreatorPanel)obj);
             }
             this.startBtn.Location = new System.Drawing.Point(((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.X, ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getPadding() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getHeight() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.Y);
-        }
-
-        private void Client_MessageReceived(string msg)
-        {
-            int p = -1;
-            try
-            {
-                p = Int32.Parse(msg);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-            switch (p)
-            {
-                case Packet.Connect:
-                    
-            }
-
         }
 
         private void startBtn_Click(object sender, EventArgs e)

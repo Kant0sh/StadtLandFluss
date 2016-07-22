@@ -9,18 +9,14 @@ using System.IO;
 using System.Net.Sockets;
 using SLF.Net;
 
-namespace SLF
+namespace SLF.Net
 {
 
     public class Client
     {
 
-        public static char SPLIT = '%';
-
         private string ipAddress;
         private int port;
-
-        TcpClient client;
 
         StreamWriter sw;
         StreamReader sr;
@@ -35,43 +31,18 @@ namespace SLF
 
         public void Run()
         {
-            client = null;
-            try
-            {
 
-                client = new TcpClient(ipAddress, port);
+            TcpClient client = new TcpClient(ipAddress, port);
 
-                Thread t = new Thread(WaitForReply);
-                t.Start(client);
+            Thread t = new Thread(WaitForReply);
+            t.Start(client);
 
-                sw = new StreamWriter(client.GetStream());
-                sr = new StreamReader(client.GetStream());
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            finally
-            {
-                if (client != null)
-                {
-                    Close();
-                }
-            }
         }
 
         public void Send(string send)
         {
             sw.WriteLine(send);
             sw.Flush();
-        }
-
-        public void Close()
-        {
-            sw.Close();
-            sr.Close();
-            client.Close();
         }
 
         private void WaitForReply(object cli)
@@ -81,12 +52,12 @@ namespace SLF
 
             try
             {
+                sr = new StreamReader(client.GetStream());
                 string reply = string.Empty;
                 while (!(reply = sr.ReadLine()).Equals("Exit"))
                 {
                     HandleMessage(reply);
                 }
-                Close();
             }
             catch (Exception e)
             {
@@ -94,33 +65,36 @@ namespace SLF
             }
             finally
             {
-                Close();
+                if(client != null)
+                {
+                    sr.Close();
+                    client.Close();
+                }
             }
         }
 
         private void HandleMessage(string msg)
         {
-            if (msg.Length == 0) return;
-            string[] splitMsg = msg.Split(SPLIT);
-            int id = -1;
-            try
-            {
-                id = Int32.Parse(splitMsg[0]);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            int type = MessageToolkit.GetType(msg);
+            string[] msgArray = MessageToolkit.GetMessageArray(msg);
 
-            switch (id)
+            switch (type)
             {
-                case (int)Packet.CatList:
+                case (int)Message.ConnectionCount:
+                    OnMessageConnectionCount(msgArray);
                     break;
                 default:
-                    Close();
                     break;
             }
 
+        }
+
+        public delegate void PacketConnectionCount(string[] msgArray);
+        public event PacketConnectionCount ConnectionCountEvent;
+
+        protected virtual void OnMessageConnectionCount(string[] msgArray)
+        {
+            ConnectionCountEvent?.Invoke(msgArray);
         }
 
     }

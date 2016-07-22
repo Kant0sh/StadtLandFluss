@@ -7,20 +7,12 @@ using System.Threading.Tasks;
 namespace SLF.Net
 {
 
-    public enum Packet
+    public enum Message
     {
+        ConnectionId,
+        ConnectionCount,
         ReadyToSendCat,
         CatList
     }
-
-    public enum Request
-    {
-        _Connections
-    }
-
-    public enum SyncRequest
-    {
-
-    }
-
+    
 }

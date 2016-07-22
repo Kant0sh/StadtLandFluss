@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SLF.Net;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +14,9 @@ namespace SLF
 {
     public partial class ConnectToServerWindow : Form
     {
+        
+        private GameData data;
+        private ServerData srvData;
 
         public ConnectToServerWindow()
         {
@@ -26,6 +30,8 @@ namespace SLF
 
             Client client = CreateClient(textBox1.Text, 59687);
 
+            data = new GameData(client);
+
             Close();
             Dispose();
             CreateAddCatWindowThread(client);
@@ -35,8 +41,11 @@ namespace SLF
         private void button2_Click(object sender, EventArgs e) // Create Server
         {
 
-            CreateServer(59687);
+            Server server = CreateServer(59687);
             Client client = CreateClient("127.0.0.1", 59687);
+
+            data = new GameData(client);
+            srvData = new ServerData(server);
 
             Close();
             Dispose();
@@ -58,10 +67,12 @@ namespace SLF
         }
 
 
-        private void CreateServer(int port)
+        private Server CreateServer(int port)
         {
             Thread t = new Thread(RunServer);
-            t.Start(new Server(port));
+            Server srv = new Server(port); 
+            t.Start(srv);
+            return srv;
         }
 
         private void RunServer(object srv)
@@ -77,7 +88,7 @@ namespace SLF
 
         private void OpenAddCatWindow(object arg)
         {
-            Application.Run(new AddCategoriesWindow((Client) arg));
+            Application.Run(new AddCategoriesWindow((Client) arg, data));
         }
 
     }
