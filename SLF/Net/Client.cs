@@ -34,6 +34,9 @@ namespace SLF.Net
 
             TcpClient client = new TcpClient(ipAddress, port);
 
+            sw = new StreamWriter(client.GetStream());
+            sr = new StreamReader(client.GetStream());
+
             Thread t = new Thread(WaitForReply);
             t.Start(client);
 
@@ -75,13 +78,19 @@ namespace SLF.Net
 
         private void HandleMessage(string msg)
         {
-            int type = MessageToolkit.GetType(msg);
+            Message type = MessageToolkit.GetType(msg);
             string[] msgArray = MessageToolkit.GetMessageArray(msg);
 
             switch (type)
             {
-                case (int)Message.ConnectionCount:
+                case Message.ConnectionCount:
                     OnMessageConnectionCount(msgArray);
+                    break;
+                case Message.CatList:
+                    OnCatListReceived(MessageToolkit.ConvertToCatList(msg));
+                    break;
+                case Message.ReadyToSendCat:
+                    OnReadyToSendCat(MessageToolkit.GetSingleInt(msg));
                     break;
                 default:
                     break;
@@ -91,10 +100,23 @@ namespace SLF.Net
 
         public delegate void PacketConnectionCount(string[] msgArray);
         public event PacketConnectionCount ConnectionCountEvent;
-
         protected virtual void OnMessageConnectionCount(string[] msgArray)
         {
             ConnectionCountEvent?.Invoke(msgArray);
+        }
+
+        public delegate void CatListReceived(List<Category> catList);
+        public event CatListReceived CatListReceivedEvent;
+        protected virtual void OnCatListReceived(List<Category> catList)
+        {
+            CatListReceivedEvent?.Invoke(catList);
+        }
+
+        public delegate void ReadyToSendCat(int count);
+        public event ReadyToSendCat ReadyToSendCatEvent;
+        protected virtual void OnReadyToSendCat(int count)
+        {
+            ReadyToSendCatEvent?.Invoke(count);
         }
 
     }

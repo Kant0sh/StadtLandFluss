@@ -32,33 +32,67 @@ namespace SLF.Net
             return GetMessageArray(GetSplitMessage(msg));
         }
 
-        public static int GetType(string[] splitMsg)
+        public static Message GetType(string[] splitMsg)
         {
-            int id = -1;
-            try
-            {
-                id = Int32.Parse(splitMsg[0]);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            return id;
+            return (Message)Enum.Parse(typeof(Message), splitMsg[0]);
         }
 
-        public static int GetType(string msg)
+        public static Message GetType(string msg)
         {
             return GetType(GetSplitMessage(msg));
         }
 
-        public static string CreateMessage(int type, string msg)
+        public static string CreateMessage(Message type, string msg)
         {
             return type.ToString() + SPLIT + msg;
         }
 
-        public static string CreateMessage(int type, int msgVal)
+        public static string CreateMessage(Message type, int msgVal)
         {
             return type.ToString() + SPLIT + msgVal.ToString();
+        }
+
+        public static string CreateMessage(Message type, bool msgBool)
+        {
+            int i = 0;
+            if (msgBool) i = 1;
+            return type.ToString() + SPLIT + i.ToString();
+        }
+
+        public static string ConvertFromCatList(List<Category> catList)
+        {
+            string s = string.Empty;
+            for(int i = 0; i < catList.Count; i++)
+            {
+                s += catList[i].getCatText();
+                if (i != catList.Count - 1) s += SPLIT.ToString();
+            }
+            return s;
+        }
+
+        public static List<Category> ConvertToCatList(string msg)
+        {
+            string[] msgArray = GetMessageArray(msg);
+            List<Category> catList = new List<Category>();
+            foreach(string s in msgArray)
+            {
+                catList.Add(new Category(s));
+            }
+            return catList;
+        }
+
+        public static bool GetSingleBool(string msg)
+        {
+            if (GetMessageArray(msg)[0] == "1")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static int GetSingleInt(string msg)
+        {
+            return Int32.Parse(GetMessageArray(msg)[0]);
         }
 
     }

@@ -38,9 +38,9 @@ namespace SLF
             // 
             this.startBtn.Location = new System.Drawing.Point(0, 0);
             this.startBtn.Name = "startBtn";
-            this.startBtn.Size = new System.Drawing.Size(50, 23);
+            this.startBtn.Size = new System.Drawing.Size(69, 23);
             this.startBtn.TabIndex = 1;
-            this.startBtn.Text = "Start";
+            this.startBtn.Text = "Ready";
             this.startBtn.UseVisualStyleBackColor = true;
             this.startBtn.Click += new System.EventHandler(this.startBtn_Click);
             // 

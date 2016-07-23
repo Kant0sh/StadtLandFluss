@@ -18,6 +18,8 @@ namespace SLF
         private ArrayList kepList;
         private Form parentForm;
 
+        public bool enabled;
+
         private int height;
         private int width;
         private int padding;
@@ -65,6 +67,8 @@ namespace SLF
             this.button.UseVisualStyleBackColor = true;
             this.button.Click += new System.EventHandler(this.button_Click);
 
+            enabled = true;
+
         }
 
         public CategoryCreatorPanel Disable()
@@ -72,6 +76,7 @@ namespace SLF
 
             this.button.Enabled = false;
             this.textBox.Enabled = false;
+            enabled = false;
 
             return this;
 
@@ -82,6 +87,7 @@ namespace SLF
 
             this.button.Enabled = true;
             this.textBox.Enabled = true;
+            enabled = true;
 
             return this;
 

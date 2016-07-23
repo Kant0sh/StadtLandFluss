@@ -34,7 +34,7 @@ namespace SLF
 
             Close();
             Dispose();
-            CreateAddCatWindowThread(client);
+            CreateAddCatWindowThread();
 
         }
 
@@ -49,7 +49,7 @@ namespace SLF
 
             Close();
             Dispose();
-            CreateAddCatWindowThread(client);
+            CreateAddCatWindowThread();
 
         }
 
@@ -79,16 +79,16 @@ namespace SLF
         {
             ((Server)srv).Run();
         }
-        private void CreateAddCatWindowThread(Client client)
+        private void CreateAddCatWindowThread()
         {
             Thread t = new Thread(OpenAddCatWindow);
             t.SetApartmentState(ApartmentState.STA);
-            t.Start(client);
+            t.Start();
         }
 
-        private void OpenAddCatWindow(object arg)
+        private void OpenAddCatWindow()
         {
-            Application.Run(new AddCategoriesWindow((Client) arg, data));
+            Application.Run(new AddCategoriesWindow(data));
         }
 
     }

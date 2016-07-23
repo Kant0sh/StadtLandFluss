@@ -15,7 +15,7 @@ namespace SLF
     {
         private ArrayList katList;
 
-        public GameWindow(ArrayList katList)
+        public GameWindow(GameData data)
         {
 
             this.katList = katList;

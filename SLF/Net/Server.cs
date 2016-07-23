@@ -146,18 +146,37 @@ namespace SLF.Net
 
         private void HandleMessage(TcpClient cli, string msg)
         {
-
-            int type = MessageToolkit.GetType(msg);
+            
+            Message type = MessageToolkit.GetType(msg);
             string[] msgArray = MessageToolkit.GetMessageArray(msg);
 
             switch (type)
             {
-                case (int)Message.ReadyToSendCat:
+                case Message.ReadyToSendCat:
+                    OnReadyToSendCatReceived(MessageToolkit.GetSingleBool(msg));
+                    break;
+                case Message.CatList:
+                    OnCatListReceived(MessageToolkit.ConvertToCatList(msg));
                     break;
                 default:
                     break;
             }
 
         }
+
+        public delegate void CatListReceived(List<Category> catList);
+        public event CatListReceived CatListReceivedEvent;
+        protected virtual void OnCatListReceived(List<Category> catList)
+        {
+            CatListReceivedEvent?.Invoke(catList);
+        }
+
+        public delegate void ReadyToSendCatReceived(bool ready);
+        public event ReadyToSendCatReceived ReadyToSendCatReceivedEvent;
+        protected virtual void OnReadyToSendCatReceived(bool ready)
+        {
+            ReadyToSendCatReceivedEvent?.Invoke(ready);
+        }
+
     }
 }

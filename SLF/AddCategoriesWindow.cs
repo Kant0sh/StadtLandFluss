@@ -15,22 +15,16 @@ namespace SLF
 {
     public partial class AddCategoriesWindow : Form
     {
-
-        private Client client;
+        
         private GameData data;
-
-        private ArrayList catList;
 
         private ArrayList ccpList;
         private Button startBtn;
 
-        public AddCategoriesWindow(Client client, GameData data)
+        public AddCategoriesWindow(GameData data)
         {
-
-            this.client = client;
             this.data = data;
-
-            catList = new ArrayList();
+            this.data.client.CatListReceivedEvent += Client_CatListReceivedEvent;
 
             InitializeComponent();
 
@@ -44,6 +38,12 @@ namespace SLF
                 this.Controls.Add((CategoryCreatorPanel)obj);
             }
             this.startBtn.Location = new System.Drawing.Point(((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.X, ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getPadding() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).getHeight() + ((CategoryCreatorPanel)ccpList[ccpList.Count - 1]).Location.Y);
+        }
+
+        private void Client_CatListReceivedEvent(List<Category> catList)
+        {
+            Thread t = new Thread(openGameWindow);
+            t.Start();
         }
 
         private void startBtn_Click(object sender, EventArgs e)
@@ -60,15 +60,10 @@ namespace SLF
 
             foreach(object obj in ccpList)
             {
-
-                catList.Add(new Category(((CategoryCreatorPanel)obj).getText()));
-
+                if(((CategoryCreatorPanel)obj).enabled && ((CategoryCreatorPanel)obj).getButtonText() != "Hinzufügen") data.catList.Add(new Category(((CategoryCreatorPanel)obj).getText()));
             }
 
-            this.Dispose(true);
-            Thread thread = new Thread(openGameWindow);
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
+            data.client.Send(MessageToolkit.CreateMessage(Net.Message.ReadyToSendCat, true));
 
         }
 
@@ -85,7 +80,7 @@ namespace SLF
 
         private void openGameWindow()
         {
-            Application.Run(new GameWindow(catList));
+            Application.Run(new GameWindow(data));
         }
 
     }
